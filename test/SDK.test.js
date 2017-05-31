@@ -1,5 +1,5 @@
-const { expect } = require('chai');
-const identityWebSdkBrowser = require('../browser/bundle');
+import { expect } from 'chai';
+import identityWebSdkBrowser from '../lib/SDK';
 
 describe('SDK', () => {
     const SDK = identityWebSdkBrowser.default;

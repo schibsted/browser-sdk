@@ -1,7 +1,7 @@
 'use strict';
 
-const { expect } = require('chai');
-const { Builder } = require('../lib/uri');
+import { expect } from 'chai';
+import { Builder } from '../lib/uri';
 
 describe('uri', () => {
     describe('Builder', ()=> {

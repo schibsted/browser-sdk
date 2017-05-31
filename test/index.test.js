@@ -1,13 +1,15 @@
-const { expect } = require('chai');
-const identityWebSdkBrowser = require('../browser/bundle');
+import { expect } from 'chai';
+import SDK from '../index';
 
 describe('index', () => {
     it('has the expected class for instantiating the SDK', () => {
-        // eslint-disable-next-line no-unused-vars
-        let instance;
-        const SDK = identityWebSdkBrowser.default;
         expect(() => {
-            instance = new SDK({ client_id: 'xxx' });
+            // eslint-disable-next-line no-unused-vars
+            let instance = new SDK({
+                client_id: 'xxx',
+                redirect_uri: 'http://localhost',
+                serverUrl: 'http://localhost'
+            });
         }).not.to.throw();
     });
 });
