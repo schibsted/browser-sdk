@@ -1,0 +1,23 @@
+extends: schibsted
+parserOptions:
+    ecmaVersion: 6,
+    sourceType: module
+    impliedStrict: true
+    ecmaFeatures:
+        modules: true
+env:
+    browser: true
+    es6: true
+    mocha: true
+rules:
+    no-undefined: off
+    no-var: off
+    camelcase:
+      - error
+      - properties: never
+    no-unused-vars:
+      - error
+      - argsIgnorePattern: next
+    max-nested-callbacks:
+      - error
+      - 4
