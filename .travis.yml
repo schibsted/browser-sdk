@@ -10,14 +10,9 @@ install: npm install
 script: npm test
 deploy:
   provider: npm
-  # Alex's public github email
   email: hanifbbz@gmail.com
-  # Alex's NPM key
   api_key:
-    secure: ZGufJeGcgtW+jlAvTemRdbSorQ7bhhhiGpr3pLu5tAKOj0bYYxDY81Avx5Uy6DAuMeDW+aLfTFKbmq8ljsrJqiWuYKKh4EHFDmTr/L7T+ZiQUjmDBV7ZuymZE6xob/4XV6S3n6YFZXN3a7oIq6pZjXh+QjTTxE7lXvk3TbuijMHLf2JidS++68tNKDt6Oo3P2Rt89sN5DpYUEEjafCqNoYryNm53WW9nN3ZCJChPBTiSLL+Q/3RAUIhhhj8vYCl9R9PlxDDNggssk5nOGT7hRqIrJ0bcll7Hd0WV+7kkncjllF7xRw9rBLiLornsh8Wip1EPEDJ+R0KMGH+o3+5E6+kn02K5Hvh161ZW7hTQRbEf7CcYQAqS0UmfFJdwkTZVdpM6Fq9Mk8TasgjDsAA8obfvP4PnScoar1z+gAj/HjJ0LoMw2n6/UUsm+H+hFH3r6opI/8+M1r6eFN5TUX5CfNTqiQvHjsOGqPnouhG7G0pvey5B8L0zDLO5DPoLXxtAjQf21GM+aHKcPVAYj+4rRH+FSpffXsOoxD5OZ/km6+v1hiMYzZk70Q5zxfWZB7wjdv9X0WQpDXCRMmkDWE52xeacNjNE9J+TAf+SJJjNgA5V3Tguqg3XAPXoe4yeWoBiWz5lM6km8qzHM4C2OTPHvUtpPgyZl6T/OZS0cYFuOHE=
+    secure: vXtC7xn3q9xssFxMrPQaDcUQhq5raq6htm0JpqMnB1az++ynMTbm3zaZuU5QDBKy6zyyXV0u8PPpyY+c43VbOUyV9nCYSMRomo/UffgMQi1NUjNWtncPNH4/Y8C5T+fcn74/Le6eJjvfMayCyuKA22phka3dehgeE5bwLpsT5AegaEXlypxiohS2WQjroHpQnf3t5qYgpFcXsx1RXtLNO+8xj7AqKQl4FvmjrVJqi+dA2bBVGgSng9/iB80BCUUcAbD+rHZ04+pfDawTcGJGsqIxLdsDaNgFWErhXHAzDVgSgqaAGLqCfj7Rk13SELIFbqaKgUXTrwuSpUwl+I06DeOn4Nnwy9FZubykFkRLhnr5Dpg6+/9U/TYav9u1H56i14Yg6hwXUvSSSN+wfrLO7P86cdRFVbXfucnKFiKN9djFfIOYxM6Wte5htWxulNMbHhzqFen9LZpADr4KT59YsYQMIShMlcwhN8I2i3+OHrLayNSmHUVZS0gItqtXnG+XLT6jhETOcjMvTyIPc2uZkLTVPzEf2aAnmXfIMk/V0lSeI1XLSK4aOXb2wIktYr/XX3qgKuVpPPV45ziJ4tlK/PjdyjKWBPHozBSxmzLWpDEG6wGreYit4yIpUoo1A3KDeg/uz+aWbf2gmgbcI9B0IUDwEt7NrK1pq51D3Roolmw=
   on:
     tags: true
     repo: schibsted/browser-sdk
-    branch: master
-    # only publish from one row of the build matrix
-    node: '8'
