@@ -16,7 +16,7 @@ Let browser apps communicate with Schibsted Identity and Payment.
 
 Use the CDN version from:
 
-https://cdn.spid.se/{VERSION}/schibsted-browser-sdk.js
+https://d3iwtia3ndepsv.cloudfront.net/sdk/{VERSION}/schibsted-browser-sdk.js
 
 *where `{VERSION}` matches what you see in the [package.json](./package.json)*
 
