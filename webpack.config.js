@@ -6,10 +6,10 @@ const { name, version } = require('./package.json');
 module.exports = {
     entry: './index.js',
     output: {
-        filename: `${name}-${version}.js`,
+        filename: `${name}.js`,
         library: 'SPiD',
         libraryTarget: 'umd',
-        path: `${__dirname}/dist`
+        path: `${__dirname}/dist/${version}`
     },
     module: {
         rules: [
