@@ -15,8 +15,7 @@
     "lint": "eslint .",
     "test": "mocha -r jsdom-global/register --compilers js:babel-core/register --recursive test",
     "docs": "eslint . && rm -rf docs && jsdoc -c ./jsdoc.json",
-    "preversion": "npm run lint && npm test && npm run docs && travis lint",
-    "version": "npm run build-prod && git add dist",
+    "preversion": "npm run lint && npm test && npm run docs",
     "postversion": "git push && git push --tags",
     "build-prod": "webpack --optimize-minimize --displayModules --display-reasons --sort-modules-by size",
     "build": "webpack --displayModules --display-reasons --sort-modules-by size"

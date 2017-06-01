@@ -6,11 +6,15 @@ cache:
   - node_modules
 install: npm install
 script: npm test
+
+before_deploy: npm run build-prod
+
 deploy:
   - provider: npm
     email: spt-identity-tech@schibsted.com
     api_key:
       secure: Y9c2RUDCGbr+NkPF0//K+EVTneJlxwlq789eVVsAyPq5N81TdfRlTLGrwdorq7oq1796Zra2e9abu62XmNt0FUUze9IXo0D8PZKcTgcE+mEkcSZUbbSUN3+WOBsnYHuj6YfB3MCqEjIKMfoGiAlx4mGrbN8/mqKr5SDrTJXL0khwLQJiBqB/kYa35IWCc+egqDlQRtu4yEM4TZYGDTBVODCNysxDmuEW81GMXmnb91N6ImNZmDDMcAEtrP20q/NxZQTUwZna0QDI2VgHkcyjJ1G4Wt9sLQg7VxyKkdf/XEvdwoK6e4g7c7efN1ifp1gFDvveXPO/hJz7696KHkIvzy/508ad7lXcUYyYQYRSpiHHbP4rdLCPFo6J5tPDXnINk3e7jRZrdVbeSjpTohElTOJ01k2Ppw5wfhfmlpBQC6lwXFDcVVHDriRttkWglo/whQ+l35cYQ/0pvOpR0lqYhRbYmziH3QEsmTdpuvf9RcgjX+TEr0q39RzGGE28OTFZxL13seoer1iAkuqJWD/XWeRU+/KsIGyo305H3mwaod9KLOiBVOjYBvaicuYG/s5wJPFOs+pI2Z2rw8qja0mPTy3e0BkdyklN/fJ1uZN4i/M4KF9d7CGgnwr2awge9TpUDCtRWONKqIo02TcLS/aZGHlzvphBPGYL02Y0j7FkWq8=
+    skip_cleanup: true
     on:
       tags: true
       repo: schibsted/browser-sdk
