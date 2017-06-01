@@ -1,12 +1,15 @@
-/* globals module */
+/* eslint-env node */
 'use strict';
+
+const { name, version } = require('./package.json');
 
 module.exports = {
     entry: './index.js',
     output: {
-        filename: 'dist/bundle.js',
+        filename: `${name}-${version}.js`,
         library: 'SPiD',
-        libraryTarget: 'umd'
+        libraryTarget: 'umd',
+        path: `${__dirname}/dist`
     },
     module: {
         rules: [
@@ -18,7 +21,7 @@ module.exports = {
         ]
     },
     performance: {
-        maxAssetSize: 10000
+        maxAssetSize: 50000
     },
     node: {
         url: true
