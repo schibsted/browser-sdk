@@ -8,24 +8,25 @@ install: npm install
 script: npm test
 deploy:
   - provider: npm
-    email: hanifbbz@gmail.com
+    email: spt-identity-tech@schibsted.com
     api_key:
-      secure: vXtC7xn3q9xssFxMrPQaDcUQhq5raq6htm0JpqMnB1az++ynMTbm3zaZuU5QDBKy6zyyXV0u8PPpyY+c43VbOUyV9nCYSMRomo/UffgMQi1NUjNWtncPNH4/Y8C5T+fcn74/Le6eJjvfMayCyuKA22phka3dehgeE5bwLpsT5AegaEXlypxiohS2WQjroHpQnf3t5qYgpFcXsx1RXtLNO+8xj7AqKQl4FvmjrVJqi+dA2bBVGgSng9/iB80BCUUcAbD+rHZ04+pfDawTcGJGsqIxLdsDaNgFWErhXHAzDVgSgqaAGLqCfj7Rk13SELIFbqaKgUXTrwuSpUwl+I06DeOn4Nnwy9FZubykFkRLhnr5Dpg6+/9U/TYav9u1H56i14Yg6hwXUvSSSN+wfrLO7P86cdRFVbXfucnKFiKN9djFfIOYxM6Wte5htWxulNMbHhzqFen9LZpADr4KT59YsYQMIShMlcwhN8I2i3+OHrLayNSmHUVZS0gItqtXnG+XLT6jhETOcjMvTyIPc2uZkLTVPzEf2aAnmXfIMk/V0lSeI1XLSK4aOXb2wIktYr/XX3qgKuVpPPV45ziJ4tlK/PjdyjKWBPHozBSxmzLWpDEG6wGreYit4yIpUoo1A3KDeg/uz+aWbf2gmgbcI9B0IUDwEt7NrK1pq51D3Roolmw=
+      secure: Y9c2RUDCGbr+NkPF0//K+EVTneJlxwlq789eVVsAyPq5N81TdfRlTLGrwdorq7oq1796Zra2e9abu62XmNt0FUUze9IXo0D8PZKcTgcE+mEkcSZUbbSUN3+WOBsnYHuj6YfB3MCqEjIKMfoGiAlx4mGrbN8/mqKr5SDrTJXL0khwLQJiBqB/kYa35IWCc+egqDlQRtu4yEM4TZYGDTBVODCNysxDmuEW81GMXmnb91N6ImNZmDDMcAEtrP20q/NxZQTUwZna0QDI2VgHkcyjJ1G4Wt9sLQg7VxyKkdf/XEvdwoK6e4g7c7efN1ifp1gFDvveXPO/hJz7696KHkIvzy/508ad7lXcUYyYQYRSpiHHbP4rdLCPFo6J5tPDXnINk3e7jRZrdVbeSjpTohElTOJ01k2Ppw5wfhfmlpBQC6lwXFDcVVHDriRttkWglo/whQ+l35cYQ/0pvOpR0lqYhRbYmziH3QEsmTdpuvf9RcgjX+TEr0q39RzGGE28OTFZxL13seoer1iAkuqJWD/XWeRU+/KsIGyo305H3mwaod9KLOiBVOjYBvaicuYG/s5wJPFOs+pI2Z2rw8qja0mPTy3e0BkdyklN/fJ1uZN4i/M4KF9d7CGgnwr2awge9TpUDCtRWONKqIo02TcLS/aZGHlzvphBPGYL02Y0j7FkWq8=
     on:
       tags: true
       repo: schibsted/browser-sdk
+
   - provider: s3
     access_key_id: AKIAIDSHJ72T7G53A7GA
     secret_access_key:
-      secure: VL53BKF6O38D5GE+NCLHbXdtC+lA+XaGg7GWmnObGXRUlaCURtm+fxsOtTRBPFCeFjg0bl/UW1ylQhZFF8UEkzYrH+MDjpcMICZQmBTry7sTxgk8yj8H/Ib+op2Gc7p8CN8PQIaJHth1uKklPEX5t9ELkFFsJkhQpTDqTFpE5/M=
+      secure: GSt3aLo7vwkQDIWhmibavw5l2ZnAyR1jXwL/f7eKtJ0H9zYSf50QKNjzlBVLN3Z4zOW8JY3Z1R7DuT0A2AAovB7bfXzQBrEio1q0YjNb3WmmXLBqDD0uuy7B/FdSkyPGjtrsn01PoPVpgyCt2opcCMcXjZ9ixITWOCPT+Na4Ww9A0mtthZpxqbgTFIpk+OS+zayRW3k7YIUMZy+2uhKsq4DPvyQqxueVpY3ifk2jSPP1g4yKfZJA0bMinM28OwBC7KHz4R4/OAUXci6D3FG9aUrxeaIqf6XiZE+pXakC6B3fxpX0XHiuJKcpYFvN2ZCOjEgqpcLFgmBXzw+xBdFlwRQ3/wwhMMfnkOPWk69W7tcrXQ2j0Q1Y3ElHmSxXaZiM47AKsRxQVaTyZOzApjg9Zt5iKYj10/olEL4Jg3Dohg+wyXXWtZcyZOHVmBHhY+/h1xazD9fsjm0IFTf8uEMBmTFuadadjZ+u82MVa6RB6rTNVs20zmKmbx+UeSIiXW+bL+b35bY6jhdZoK54zp+qRIyQhV3heEHa9TIgAzZ0BBLHYXgXDYS3AKgvGRI1gv/rHvR1tIC8h5uVq+NdqBdJZgFfWdPuem6yOgMX9fhxXlaWFzAKNR8CH3KFMraxlD55XwV6tt/S+lyKDEJl29f8UZ4VFk3lXCVfxNzAN+MTBdM=
     bucket: cdn.spid.se
     region: eu-west-1
     detect_encoding: true
     cache_control: "no-transform,public,max-age=31536000"
     local-dir: dist
-    upload-dir: "$TRAVIS_TAG"
-    acl: public_read
+    upload-dir: sdk
     skip_cleanup: true
+    acl: public_read
     on:
-      repo: schibsted/browser-sdk
       tags: true
+      repo: schibsted/browser-sdk
