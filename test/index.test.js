@@ -8,7 +8,8 @@ describe('index', () => {
             let instance = new SDK({
                 client_id: 'xxx',
                 redirect_uri: 'http://localhost',
-                serverUrl: 'http://localhost'
+                serverUrl: 'http://localhost',
+                paymentServerUrl: 'http://localhost:4100'
             });
         }).not.to.throw();
     });
