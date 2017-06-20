@@ -38,7 +38,7 @@
     "jsdom": "^11.0.0",
     "jsdom-global": "^3.0.2",
     "mocha": "^3.3.0",
-    "webpack": "^2.6.1"
+    "webpack": "^3.0.0"
   },
   "repository": {
     "type": "git",
