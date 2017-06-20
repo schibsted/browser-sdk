@@ -9,6 +9,7 @@
     "oauth"
   ],
   "license": "MIT",
+  "author": "Schibsted Media Group",
   "main": "index.js",
   "browser": "dist/bundle.js",
   "scripts": {
@@ -17,7 +18,7 @@
     "docs": "eslint . && rm -rf docs && jsdoc -c ./jsdoc.json",
     "preversion": "npm run lint && npm test && npm run docs",
     "postversion": "git push && git push --tags",
-    "build-prod": "webpack --optimize-minimize --displayModules --display-reasons --sort-modules-by size",
+    "build-pro": "node build --pro",
     "build": "node build"
   },
   "dependencies": {

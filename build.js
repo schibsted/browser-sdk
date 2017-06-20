@@ -5,22 +5,23 @@
 
 const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
-const { name, version } = require('./package.json');
+const { name, version, license, author } = require('./package.json');
 const minimist = require('minimist');
 const bytes = require('bytes');
 const chalk = require('chalk');
 const cliOptions = minimist(process.argv.slice(2), {
     boolean: true,
-    // To build for production, pass --prod
+    // To build for production, pass --pro
     default: {
-        prod: false
+        pro: false
     }
 });
 
-console.log(`Building for production: ${cliOptions.prod}`);
+console.log(`Building for production: ${cliOptions.pro}`);
 
 const buildConfig = {
-    maxOutputBytes: 50 * 1024
+    maxOutputBytes: 50 * 1024,
+    copyrightHeader: `${name} v${version}. Copyright (C) ${new Date().getFullYear()} ${author} [${license}].`
 };
 
 const webpackOptionsBase = {
@@ -65,11 +66,11 @@ const webpackOptionsPro = webpackMerge(webpackOptionsBase, {
     devtool: 'source-map',
     plugins: [
         new webpack.optimize.UglifyJsPlugin(),
-        new webpack.BannerPlugin('banner')
+        new webpack.BannerPlugin(buildConfig.copyrightHeader)
     ]
 });
 
-const compiler = webpack(cliOptions.prod ? webpackOptionsPro : webpackOptionsDev);
+const compiler = webpack(cliOptions.pro ? webpackOptionsPro : webpackOptionsDev);
 
 function statsToStr(stats) {
     // return Array.isArray(stats.assets)
