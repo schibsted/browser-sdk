@@ -3,9 +3,14 @@
 /* eslint-env node */
 'use strict';
 
+const path = require('path');
+const fs = require('fs');
 const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
-const { name, version, license, author } = require('./package.json');
+const { promisify } = require('util');
+const ssri = require('ssri');
+const shell = require('shelljs');
+const { main, name, version, license, author } = require('./package.json');
 const minimist = require('minimist');
 const bytes = require('bytes');
 const chalk = require('chalk');
@@ -21,16 +26,17 @@ console.log(`Building for production: ${cliOptions.pro}`);
 
 const buildConfig = {
     maxOutputBytes: 50 * 1024,
+    distPath: './dist',
     copyrightHeader: `${name} v${version}. Copyright (C) ${new Date().getFullYear()} ${author} [${license}].`
 };
 
 const webpackOptionsBase = {
-    entry: './index.js',
+    entry: path.resolve(__dirname, main),
     output: {
         filename: `${name}.js`,
         library: 'SPiD',
         libraryTarget: 'umd',
-        path: `${__dirname}/dist/${version}`
+        path: path.join(__dirname, buildConfig.distPath, version)
     },
     module: {
         rules: [
@@ -83,6 +89,15 @@ function statsToStr(stats) {
         .join('\n');
 }
 
+function createSSRI(inputFileName, outputFileName) {
+    const fsWriteFile = promisify(fs.writeFile);
+    return ssri.fromStream(fs.createReadStream(inputFileName), {
+        algorithms: ['sha1', 'sha512']
+    })
+    .then(integrity => fsWriteFile(outputFileName, integrity.toString()));
+}
+
+shell.rm('-rf', buildConfig.distPath);
 compiler.run((err, stats) => {
     if (err) {
         console.error(chalk.bgRed(`Webpack error: ${err.stack || err}`));
@@ -104,4 +119,12 @@ compiler.run((err, stats) => {
         console.log(chalk.bgGreen('Webpack build finished successfully'));
         console.log(statsToStr(statsJson));
     }
+    createSSRI(
+        path.join(__dirname, buildConfig.distPath, version, statsJson.assets[0].name),
+        path.join(__dirname, buildConfig.distPath, version, statsJson.assets[0].name + '.txt')
+    )
+    .then(
+        () => console.log(chalk.green('Wrote integrity check')),
+        () => console.error(chalk.red('Failed to write integrity check'))
+    );
 });
