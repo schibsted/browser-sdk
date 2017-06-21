@@ -9,6 +9,7 @@
     "oauth"
   ],
   "license": "MIT",
+  "author": "Schibsted Media Group",
   "main": "index.js",
   "browser": "dist/bundle.js",
   "scripts": {
@@ -17,8 +18,8 @@
     "docs": "eslint . && rm -rf docs && jsdoc -c ./jsdoc.json",
     "preversion": "npm run lint && npm test && npm run docs",
     "postversion": "git push && git push --tags",
-    "build-prod": "webpack --optimize-minimize --displayModules --display-reasons --sort-modules-by size",
-    "build": "webpack --displayModules --display-reasons --sort-modules-by size"
+    "build-pro": "node build --pro",
+    "build": "node build"
   },
   "dependencies": {
     "browser-cookies": "^1.1.0",
@@ -30,15 +31,21 @@
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
     "babel-preset-es2015": "^6.24.1",
+    "bytes": "^2.5.0",
     "chai": "^4.0.0",
+    "chalk": "^1.1.3",
     "eslint": "^3.19.0",
     "eslint-config-schibsted": "^3.1.0",
     "eslint-plugin-import": "^2.2.0",
     "jsdoc": "^3.4.3",
     "jsdom": "^11.0.0",
     "jsdom-global": "^3.0.2",
+    "minimist": "^1.2.0",
     "mocha": "^3.3.0",
-    "webpack": "^2.6.1"
+    "shelljs": "^0.7.8",
+    "ssri": "^4.1.6",
+    "webpack": "^3.0.0",
+    "webpack-merge": "^4.1.0"
   },
   "repository": {
     "type": "git",
