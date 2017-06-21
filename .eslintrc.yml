@@ -17,4 +17,4 @@ rules:
     - argsIgnorePattern: next
   max-nested-callbacks:
     - error
-    - 4
+    - 5
