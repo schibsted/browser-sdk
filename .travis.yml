@@ -9,7 +9,7 @@ install: npm install
 
 script: npm test
 
-before_deploy: npm run build-prod
+before_deploy: npm run build-pro
 
 deploy:
   - provider: npm
