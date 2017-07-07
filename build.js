@@ -17,11 +17,9 @@ const bytes = require('bytes');
 const chalk = require('chalk');
 const cliOptions = minimist(process.argv.slice(2), {
     boolean: true,
+    // To build for production, pass --pro
     default: {
-        // To build for production, pass --pro
-        pro: false,
-        // Watch the files (suitable for development mode but it's opt-in)
-        watch: false
+        pro: false
     }
 });
 
@@ -62,22 +60,24 @@ const webpackOptionsBase = {
 // --displayModules
 // --display-reasons (reasons: true)
 // --sort-modules-by size (modulesSort: 'size')
-const webpackOptionsDev = {
+const webpackOptionsDev = webpackMerge(webpackOptionsBase, {
     devtool: 'inline-source-map'
-};
+});
 
-// Build-Pro:
+// Build-Prod:
 // --optimize-minimize
 // --displayModules
 // --display-reasons
 // --sort-modules-by size",
-const webpackOptionsPro = {
+const webpackOptionsPro = webpackMerge(webpackOptionsBase, {
     devtool: 'source-map',
     plugins: [
         new webpack.optimize.UglifyJsPlugin(),
         new webpack.BannerPlugin(buildConfig.copyrightHeader)
     ]
-};
+});
+
+const compiler = webpack(cliOptions.pro ? webpackOptionsPro : webpackOptionsDev);
 
 function statsToStr(stats) {
     // return Array.isArray(stats.assets)
@@ -98,69 +98,34 @@ function createSSRI(inputFileName, outputFileName) {
     .then(integrity => fsWriteFile(outputFileName, integrity.toString()));
 }
 
-function cleanDist() {
-    shell.rm('-rf', buildConfig.distPath);
-}
-
-function compile(compiler) {
-    compiler.run((err, stats) => {
-        if (err) {
-            console.error(chalk.bgRed(`Webpack error: ${err.stack || err}`));
-            if (err.details) {
-                console.error(chalk.bgRed(`Error details: ${err.details}`));
-            }
-            process.exit(1);
+shell.rm('-rf', buildConfig.distPath);
+compiler.run((err, stats) => {
+    if (err) {
+        console.error(chalk.bgRed(`Webpack error: ${err.stack || err}`));
+        if (err.details) {
+            console.error(chalk.bgRed(`Error details: ${err.details}`));
         }
-        if (stats.hasErrors()) {
-            console.error(chalk.bgRed(`Compilation errors: ${stats.toJson().errors}`));
-            process.exit(2);
-        }
-        const statsJson = stats.toJson({modulesSort: 'size'});
-        console.log(chalk.yellow(`Compilation finished in in ${stats.endTime - stats.startTime}ms. The result is ${bytes(statsJson.assets[0].size)}`));
-        if (stats.hasWarnings()) {
-            console.warn(chalk.bgYellow(`Webpack build finished with some warnings: ${stats.toJson().warnings}`));
-            console.warn(statsToStr(statsJson));
-        } else {
-            console.log(chalk.bgGreen('Webpack build finished successfully'));
-            console.log(statsToStr(statsJson));
-        }
-        createSSRI(
-            path.join(__dirname, buildConfig.distPath, version, statsJson.assets[0].name),
-            path.join(__dirname, buildConfig.distPath, version, statsJson.assets[0].name + '.txt')
-        )
-        .then(
-            () => console.log(chalk.green('Wrote integrity check')),
-            () => console.error(chalk.red('Failed to write integrity check'))
-        );
-    });
-}
-
-function watch(compiler) {
-    compiler.watch((err, stats) => {
-        if (err) {
-            console.error(chalk.bgRed(`Webpack error: ${err.stack || err}`));
-            if (err.details) {
-                console.error(chalk.bgRed(`Error details: ${err.details}`));
-            }
-            process.exit(1);
-        }
-        if (stats.hasErrors()) {
-            console.error(chalk.bgRed(`Compilation errors: ${stats.toJson().errors}`));
-            process.exit(2);
-        }
-    });
-}
-
-cleanDist();
-if (cliOptions.pro) {
-    const compiler = webpack(webpackMerge(webpackOptionsBase, webpackOptionsPro));
-    compile(compiler);
-} else {
-    const compiler = webpack(webpackMerge(webpackOptionsBase, webpackOptionsDev));
-    if (cliOptions.watch) {
-        console.log('Watching...');
-        watch(compiler);
-    } else {
-        compile(compiler);
+        process.exit(1);
     }
-}
+    if (stats.hasErrors()) {
+        console.error(chalk.bgRed(`Compilation errors: ${stats.toJson().errors}`));
+        process.exit(2);
+    }
+    const statsJson = stats.toJson({modulesSort: 'size'});
+    console.log(chalk.yellow(`Compilation finished in in ${stats.endTime - stats.startTime}ms. The result is ${bytes(statsJson.assets[0].size)}`));
+    if (stats.hasWarnings()) {
+        console.warn(chalk.bgYellow(`Webpack build finished with some warnings: ${stats.toJson().warnings}`));
+        console.warn(statsToStr(statsJson));
+    } else {
+        console.log(chalk.bgGreen('Webpack build finished successfully'));
+        console.log(statsToStr(statsJson));
+    }
+    createSSRI(
+        path.join(__dirname, buildConfig.distPath, version, statsJson.assets[0].name),
+        path.join(__dirname, buildConfig.distPath, version, statsJson.assets[0].name + '.txt')
+    )
+    .then(
+        () => console.log(chalk.green('Wrote integrity check')),
+        () => console.error(chalk.red('Failed to write integrity check'))
+    );
+});

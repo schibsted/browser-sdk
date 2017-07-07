@@ -19,9 +19,7 @@
     "preversion": "npm run lint && npm test && npm run docs",
     "postversion": "git push && git push --tags",
     "build-pro": "node build --pro",
-    "build": "node build",
-    "prestart": "npm run build",
-    "start": "http-server dist/ --gzip -c-1"
+    "build": "node build"
   },
   "dependencies": {
     "browser-cookies": "^1.1.0",
@@ -39,7 +37,6 @@
     "eslint": "^3.19.0",
     "eslint-config-schibsted": "^3.1.0",
     "eslint-plugin-import": "^2.2.0",
-    "http-server": "^0.10.0",
     "jsdoc": "^3.4.3",
     "jsdom": "^11.0.0",
     "jsdom-global": "^3.0.2",
