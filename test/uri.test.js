@@ -1,92 +1,126 @@
 'use strict';
 
+import { URL } from 'url';
 import { expect } from 'chai';
-import { Builder } from '../lib/uriSpid';
-import { Builder as BuilderBff } from '../lib/uriBff';
+import { urlNormalizer, server, Uri } from '../lib/uri';
 
-describe('uri', () => {
-    describe('Builder using domain', ()=> {
-        let builder;
+/**
+ * A test utility function for checking the query parameters against an expected object
+ * @param {URLSearchParams} searchParams
+ * @param {object} expectedParams - a hash that represents the expected key&value params
+ */
+function checkSearchParams(searchParams, expectedParams) {
+    Object.keys(expectedParams)
+        .forEach(key => expect(searchParams.get(key)).to.equal(expectedParams[key], `${key} param`));
+}
 
-        beforeEach(() => {
-            builder = new Builder('http://spp.dev');
+describe('urlNormalizer', () => {
+
+    it('can handle hostname shorthands', () => {
+        expect(urlNormalizer('SHORTHAND1', {
+            'SHORTHAND1': 'http://shorthand1.local'
+        })).to.equal('http://shorthand1.local');
+    });
+
+    it('returns the hostname parameter if the shorthand does not exist', () => {
+        expect(urlNormalizer('SHORTHAND2', {
+            'SHORTHAND1': 'http://shorthand1.local'
+        })).to.equal('SHORTHAND2');
+    });
+
+});
+
+describe('server', () => {
+
+    it('can build uris with no default params', () => {
+        const endpoint = new server('http://example.com');
+        expect(endpoint('/server')).to.equal('http://example.com/server');
+    });
+
+    it('can build uris with params', () => {
+        const endpoint = new server('http://example.com');
+        expect(endpoint('/server', { a: 1, foo: 'bar' })).to.equal('http://example.com/server?a=1&foo=bar');
+    });
+
+    it('can build uris with default params', () => {
+        const endpoint = new server('http://example.com', { a: 1, foo: 'bar' });
+        expect(endpoint('/server')).to.equal('http://example.com/server?a=1&foo=bar');
+    });
+
+});
+
+describe('Uri', () => {
+
+    describe('login', () => {
+
+        it('returns the expected endpoint', () => {
+            const uri = new Uri({ serverUrl: 'http://spp.dev' });
+            expect(uri.login('opt-email')).to.equal('http://spp.dev/bff-oauth/authorize?response_type=code&scope=openid&acr_values=opt-email');
         });
 
-        describe('login', () => {
-            it('returns the expected endpoint', () => {
-                expect(builder.login('opt-email')).to.equal('http://spp.dev/bff-oauth/authorize?response_type=code&scope=openid&acr_values=opt-email');
-            });
+    });
+
+    describe('sessionCluster', () => {
+
+        it('returns the expected endpoint', () => {
+            const uri = new Uri({ serverUrl: 'LOCAL' });
+            expect(uri.sessionCluster(1)).to.equal('http://session.spp.dev/rpc/hasSession.js?autologin=1');
         });
 
-        describe('sessionCluster', () => {
-            it('returns the expected endpoint', () => {
-                expect(builder.sessionCluster(1)).to.equal('http://session.spp.dev/rpc/hasSession.js?autologin=1');
-            });
+    });
+
+    describe('session', () => {
+
+        it('returns the expected endpoint', () => {
+            const uri = new Uri({ serverUrl: 'http://spp.dev' });
+            expect(uri.session(1)).to.equal('http://spp.dev/ajax/hasSession.js?autologin=1');
         });
 
-        describe('session', () => {
-            it('returns the expected endpoint', () => {
-                expect(builder.session(1)).to.equal('http://spp.dev/ajax/hasSession.js?autologin=1');
+    });
+
+    describe('payment', () => {
+
+        it('returns the expected endpoint to purchase flow with default redirect uri', () => {
+            const uri = new Uri({
+                serverUrl: 'LOCAL',
+                redirect_uri: 'http://localhost:4000',
+                client_id: 'AAAxxEEE'
             });
+            const result = uri.purchasePaylink(532);
+            const parseResult = new URL(result);
+            expect(parseResult.protocol).to.equal('http:');
+            expect(parseResult.host).to.equal('spp.dev:4100');
+            expect(parseResult.pathname).to.equal('/api/payment/purchase');
+            checkSearchParams(parseResult.searchParams, {
+                redirect_uri: 'http://localhost:4000',
+                client_id: 'AAAxxEEE',
+                paylink: '532'
+            })
+            expect(parseResult.searchParams.get('redirect_uri')).to.equal('http://localhost:4000', 'redirect_uri param');
+            expect(parseResult.searchParams.get('client_id')).to.equal('AAAxxEEE', 'client_id param');
+            expect(parseResult.searchParams.get('paylink')).to.equal('532', 'paylink param');
         });
 
-        describe('payment', () => {
-            beforeEach(() => {
-                builder = new BuilderBff('http://bff.spp.dev', {
-                    redirect_uri: 'http://localhost:4000',
-                    client_id: 'AAAxxEEE'
-                });
+        it('returns the expected endpoint to purchase flow with redirect uri', () => {
+            const uri = new Uri({
+                serverUrl: 'LOCAL',
+                redirect_uri: 'http://localhost:4000', // this will be overriden
+                client_id: 'AAAxxEEE'
             });
-            describe('returns the expected endpoint', () => {
-                it('to purchase flow with default redirect uri', () => {
-                    expect(builder.purchasePaylink(532)).to.equal('http://bff.spp.dev/api/payment/purchase?redirect_uri=http%3A%2F%2Flocalhost%3A4000&client_id=AAAxxEEE&paylink=532');
-                });
-                it('to purchase flow with redirect uri', () => {
-                    expect(builder.purchasePaylink(532, 'http://localhost:5000')).to.equal('http://bff.spp.dev/api/payment/purchase?redirect_uri=http%3A%2F%2Flocalhost%3A5000&client_id=AAAxxEEE&paylink=532');
-                });
-            });
+            const result = uri.purchasePaylink(532, 'http://localhost:5000');
+            const parseResult = new URL(result);
+            expect(parseResult.protocol).to.equal('http:');
+            expect(parseResult.host).to.equal('spp.dev:4100');
+            expect(parseResult.pathname).to.equal('/api/payment/purchase');
+            checkSearchParams(parseResult.searchParams, {
+                redirect_uri: 'http://localhost:5000',
+                client_id: 'AAAxxEEE',
+                paylink: '532'
+            })
+            expect(parseResult.searchParams.get('redirect_uri')).to.equal('http://localhost:5000', 'redirect_uri param');
+            expect(parseResult.searchParams.get('client_id')).to.equal('AAAxxEEE', 'client_id param');
+            expect(parseResult.searchParams.get('paylink')).to.equal('532', 'paylink param');
         });
     });
-    describe('Builder using env name', ()=> {
-        let builder;
 
-        beforeEach(() => {
-            builder = new Builder('PRE');
-        });
-
-        describe('login', () => {
-            it('returns the expected endpoint', () => {
-                expect(builder.login('opt-email')).to.equal('https://identity-pre.schibsted.com/bff-oauth/authorize?response_type=code&scope=openid&acr_values=opt-email');
-            });
-        });
-
-        describe('sessionCluster', () => {
-            it('returns the expected endpoint', () => {
-                expect(builder.sessionCluster(1)).to.equal('https://session.identity-pre.schibsted.com/rpc/hasSession.js?autologin=1');
-            });
-        });
-
-        describe('session', () => {
-            it('returns the expected endpoint', () => {
-                expect(builder.session(1)).to.equal('https://identity-pre.schibsted.com/ajax/hasSession.js?autologin=1');
-            });
-        });
-
-        describe('payment', () => {
-            beforeEach(() => {
-                builder = new BuilderBff('LOCAL', {
-                    redirect_uri: 'http://localhost:4000',
-                    client_id: 'AAAxxEEE'
-                });
-            });
-            describe('returns the expected endpoint', () => {
-                it('to purchase flow with default redirect uri', () => {
-                    expect(builder.purchasePaylink(532)).to.equal('http://spp.dev:4100/api/payment/purchase?redirect_uri=http%3A%2F%2Flocalhost%3A4000&client_id=AAAxxEEE&paylink=532');
-                });
-                it('to purchase flow with redirect uri', () => {
-                    expect(builder.purchasePaylink(532, 'http://localhost:5000')).to.equal('http://spp.dev:4100/api/payment/purchase?redirect_uri=http%3A%2F%2Flocalhost%3A5000&client_id=AAAxxEEE&paylink=532');
-                });
-            });
-        });
-    });
 });

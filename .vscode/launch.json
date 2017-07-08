@@ -5,9 +5,24 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug tests",
             "type": "node",
             "request": "launch",
+            "stopOnEntry": false,
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "-r",
+                "jsdom-global/register",
+                "--compilers",
+                "js:babel-core/register",
+                "--recursive",
+                "test"
+            ]
+        },
+        {
             "name": "Launch Build",
+            "type": "node",
+            "request": "launch",
             "program": "${workspaceRoot}/build.js"
         }
     ]
